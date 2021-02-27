@@ -19,6 +19,7 @@ let
 
     # obeliskSrc = import .obelisk/impl/thunk.nix;
     obeliskSrc = ./.obelisk/impl;
+    obeliskProject = import ./default.nix {};
 
     # This is the build of HLS for this project.
     #
@@ -56,8 +57,16 @@ let
         obelisk-executable-config-lookup = obeliskSrc + "/lib/executable-config/lookup";
         tabulation = obeliskSrc + "/lib/tabulation";
         # example-haskell-lib = cleaned ./library;
+        frontend = cleaned ./frontend;
+        obelisk-frontend = obeliskSrc + "/lib/frontend";
+        obelisk-generated-static = obeliskSrc + "/lib/frontend";
+        obelisk-executable-config-inject = obeliskSrc + "/lib/executable-config/inject";
+        obelisk-asset-manifest = obeliskSrc + "/lib/asset/manifest";
     }) (self: super: {
+        reflex-dom = nixpkgs.haskell.lib.addBuildDepend (nixpkgs.haskell.lib.enableCabalFlag super.reflex-dom "use-warp") self.jsaddle-warp;
+        jsaddle-webkit2gtk = null;
         monoidal-containers = nixpkgs.haskell.lib.doJailbreak super.monoidal-containers;
+        obelisk-generated-static = nixpkgs.haskell.lib.dontHaddock (self.callCabal2nix "obelisk-generated-static" obeliskProject.passthru.processedStatic.haskellManifest {});
     });
 
     # Here we extend Nixpkgs' build of Haskell packages for a specific version
@@ -74,6 +83,7 @@ let
     selectPackages = hsPkgs: with hsPkgs; {
         inherit
         common
+        frontend
         ;
     };
 
