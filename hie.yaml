@@ -4,3 +4,5 @@ cradle:
       component: "lib:common"
     - path: "./frontend/"
       component: "lib:frontend"
+    - path: "./backend/"
+      component: "lib:backend"

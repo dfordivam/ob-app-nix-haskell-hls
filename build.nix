@@ -20,6 +20,7 @@ let
     # obeliskSrc = import .obelisk/impl/thunk.nix;
     obeliskSrc = ./.obelisk/impl;
     obeliskProject = import ./default.nix {};
+    snapCoreSrc = import (obeliskSrc + /dep/snap-core/thunk.nix);
 
     # This is the build of HLS for this project.
     #
@@ -62,7 +63,12 @@ let
         obelisk-generated-static = obeliskSrc + "/lib/frontend";
         obelisk-executable-config-inject = obeliskSrc + "/lib/executable-config/inject";
         obelisk-asset-manifest = obeliskSrc + "/lib/asset/manifest";
+        backend = cleaned ./backend;
+        obelisk-backend = obeliskSrc + "/lib/backend";
+        obelisk-asset-serve-snap = obeliskSrc + "/lib/asset/serve-snap";
+        obelisk-snap-extras = obeliskSrc + "/lib/snap-extras";
     }) (self: super: {
+        snap-core = nixpkgs.haskell.lib.dontCheck (self.callCabal2nix "snap-core" snapCoreSrc {});
         reflex-dom = nixpkgs.haskell.lib.addBuildDepend (nixpkgs.haskell.lib.enableCabalFlag super.reflex-dom "use-warp") self.jsaddle-warp;
         jsaddle-webkit2gtk = null;
         monoidal-containers = nixpkgs.haskell.lib.doJailbreak super.monoidal-containers;
@@ -84,6 +90,7 @@ let
         inherit
         common
         frontend
+        backend
         ;
     };
 

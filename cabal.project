@@ -1,6 +1,7 @@
 packages:
   common
   frontend
+  backend
   -- .obelisk/impl/lib/route
   -- .obelisk/impl/lib/executable-config/lookup
   -- .obelisk/impl/lib/tabulation
