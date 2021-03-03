@@ -1,0 +1,8 @@
+{
+  "owner": "obsidiansystems",
+  "repo": "obelisk",
+  "branch": "dn-fixes-to-use-nix-haskell-lhs",
+  "private": false,
+  "rev": "710b8d5f0dabaf7a710d14490187568f7c5bf609",
+  "sha256": "0fvqhz46dqghlqhlp3kzqrq4s1wbrpqnb05jh2k287q4f2lrdpm8"
+}
