@@ -8,7 +8,8 @@ let
     # `(import <nixpkgs> {})`.  This way we get a specific version of Nixpkgs
     # instead of a version that happens to be in the environment's `NIX_PATH`.
     #
-    sources = import ../nix-haskell-hls/nix/sources;
+    nix-haskell-hls = import ./nix-haskell-hls/thunk.nix;
+    sources = import (nix-haskell-hls + "/nix/sources");
     # nixpkgs = (import sources.nixpkgs-unstable) {
     nixpkgs = (import sources.nixpkgs-stable) {
         # We don't want user configuration affecting this build.  This is
@@ -17,14 +18,14 @@ let
         overlays = [];  # to avoid picking up ~/.config/nixpkgs/overlays
     };
 
-    # obeliskSrc = import .obelisk/impl/thunk.nix;
-    obeliskSrc = ./.obelisk/impl;
+    obeliskSrc = import .obelisk/impl/thunk.nix;
+    # obeliskSrc = ./.obelisk/impl;
     obeliskProject = import ./default.nix {};
-    snapCoreSrc = import (obeliskSrc + /dep/snap-core/thunk.nix);
+    snapCoreSrc = import (obeliskSrc + "/dep/snap-core/thunk.nix");
 
     # This is the build of HLS for this project.
     #
-    hls = import ../nix-haskell-hls/. {
+    hls = import (nix-haskell-hls + "/default.nix") {
         ghcVersion = config.ghcVersion;
         hlsUnstable   = config.hlsUnstable;
     };
